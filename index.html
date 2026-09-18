@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Industry SaaS Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col items-center p-4">
+
+    <header class="text-center my-6">
+        <h1 class="text-3xl font-bold text-indigo-400">Multi-Industry AI Lead Engine</h1>
+        <p class="text-slate-400 text-sm mt-1">Business | Services | Education</p>
+    </header>
+
+    <main class="w-full max-w-lg bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+        <form id="leadForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Industry (අංශය)</label>
+                <select id="industry" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white">
+                    <option value="business">Business (ව්‍යාපාරික)</option>
+                    <option value="services">Services (සේවා)</option>
+                    <option value="education">Education (අධ්‍යාපනික)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Name (නම)</label>
+                <input type="text" id="customer_name" placeholder="John Doe" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Contact Info (දුරකථන / Email)</label>
+                <input type="text" id="contact_info" placeholder="0771234567" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Inquiry / Details (විස්තරය)</label>
+                <textarea id="user_prompt" rows="3" placeholder="ඔබට අවශ්‍ය සේවාව පිළිබඳ විස්තර කරන්න..." class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white" required></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold p-3 rounded transition">Submit Lead</button>
+        </form>
+
+        <div id="result" class="mt-6 hidden p-4 rounded bg-slate-700 border border-slate-600">
+            <h3 class="font-bold text-green-400">Response:</h3>
+            <pre id="resultText" class="text-xs mt-2 overflow-x-auto text-slate-200"></pre>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('leadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                industry: document.getElementById('industry').value,
+                customer_name: document.getElementById('customer_name').value,
+                contact_info: document.getElementById('contact_info').value,
+                user_prompt: document.getElementById('user_prompt').value
+            };
+
+            const res = await fetch('/api/leads', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            const resultData = await res.json();
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('resultText').innerText = JSON.stringify(resultData, null, 2);
+        });
+    </script>
+</body>
+</html>
